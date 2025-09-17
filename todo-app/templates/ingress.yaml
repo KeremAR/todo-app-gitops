@@ -32,6 +32,4 @@ spec:
             name: todo-service
             port:
               number: {{ .Values.todoService.port }}
-      # Not: Diğer path'leri (örn: /login, /register) buraya ekleyebilirsiniz
-      # Hepsi user-service'e yönlendirilir.
 {{- end }}
