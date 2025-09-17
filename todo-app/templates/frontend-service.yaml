@@ -5,8 +5,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.frontend.port }}
-      targetPort: {{ .Values.frontend.port }}
+    - port: {{ .Values.frontend.service.port }}
+      targetPort: {{ .Values.frontend.service.targetPort }}
       protocol: TCP
   selector:
     app: frontend

@@ -5,8 +5,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.userService.port }}
-      targetPort: {{ .Values.userService.port }}
+    - port: {{ .Values.userService.service.port }}
+      targetPort: {{ .Values.userService.service.targetPort }}
       protocol: TCP
   selector:
     app: user-service

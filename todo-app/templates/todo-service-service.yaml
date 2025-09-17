@@ -5,8 +5,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: {{ .Values.todoService.port }}
-      targetPort: {{ .Values.todoService.port }}
+    - port: {{ .Values.todoService.service.port }}
+      targetPort: {{ .Values.todoService.service.targetPort }}
       protocol: TCP
   selector:
     app: todo-service

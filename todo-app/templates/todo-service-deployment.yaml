@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: todo-service
 spec:
-  replicas: {{ .Values.todoService.replicaCount }}
+  replicas: {{ .Values.todoService.deployment.replicas }}
   selector:
     matchLabels:
       app: todo-service
@@ -13,15 +13,15 @@ spec:
         app: todo-service
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecret }}
+        - name: {{ .Values.global.imagePullSecrets.name }}
       containers:
         - name: todo-service
-          image: "{{ .Values.todoService.repository }}:{{ .Values.imageTag }}"
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.todoService.image.repository }}:{{ .Values.todoService.image.tag }}"
           imagePullPolicy: Always
           ports:
-            - containerPort: {{ .Values.todoService.port }}
+            - containerPort: {{ .Values.todoService.service.targetPort }}
           env:
             - name: SECRET_KEY
-              value: "dummy-secret-key-from-git"
+              value: {{ .Values.todoService.env.secretKey | quote }}
             - name: USER_SERVICE_URL
-              value: "http://user-service:{{ .Values.userService.port }}"
+              value: {{ .Values.todoService.env.userServiceUrl | quote }}

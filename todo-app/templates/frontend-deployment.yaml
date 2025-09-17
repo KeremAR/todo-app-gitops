@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: frontend
 spec:
-  replicas: {{ .Values.frontend.replicaCount }}
+  replicas: {{ .Values.frontend.deployment.replicas }}
   selector:
     matchLabels:
       app: frontend
@@ -13,10 +13,10 @@ spec:
         app: frontend
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecret }}
+        - name: {{ .Values.global.imagePullSecrets.name }}
       containers:
         - name: frontend
-          image: "{{ .Values.frontend.repository }}:{{ .Values.imageTag }}"
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: Always
           ports:
-            - containerPort: {{ .Values.frontend.port }}
+            - containerPort: {{ .Values.frontend.service.targetPort }}

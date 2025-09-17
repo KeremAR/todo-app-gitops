@@ -11,25 +11,13 @@ spec:
   - host: {{ .Values.ingress.host }}
     http:
       paths:
-      - path: /
-        pathType: Prefix
+      {{- range .Values.ingress.paths }}
+      - path: {{ .path }}
+        pathType: {{ .pathType }}
         backend:
           service:
-            name: frontend
+            name: {{ .service }}
             port:
-              number: {{ .Values.frontend.port }}
-      - path: /users
-        pathType: Prefix
-        backend:
-          service:
-            name: user-service
-            port:
-              number: {{ .Values.userService.port }}
-      - path: /todos
-        pathType: Prefix
-        backend:
-          service:
-            name: todo-service
-            port:
-              number: {{ .Values.todoService.port }}
+              number: {{ .port }}
+      {{- end }}
 {{- end }}

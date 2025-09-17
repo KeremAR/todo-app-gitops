@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: user-service
 spec:
-  replicas: {{ .Values.userService.replicaCount }}
+  replicas: {{ .Values.userService.deployment.replicas }}
   selector:
     matchLabels:
       app: user-service
@@ -13,15 +13,15 @@ spec:
         app: user-service
     spec:
       imagePullSecrets:
-        - name: {{ .Values.imagePullSecret }}
+        - name: {{ .Values.global.imagePullSecrets.name }}
       containers:
         - name: user-service
-          image: "{{ .Values.userService.repository }}:{{ .Values.imageTag }}"
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.userService.image.repository }}:{{ .Values.userService.image.tag }}"
           imagePullPolicy: Always
           ports:
-            - containerPort: {{ .Values.userService.port }}
+            - containerPort: {{ .Values.userService.service.targetPort }}
           # Not: env değişkenleri ve problar gibi daha karmaşık yapılandırmaları
           # daha sonra values.yaml'a ekleyerek burayı zenginleştirebilirsiniz.
           env:
             - name: SECRET_KEY
-              value: "dummy-secret-key-from-git" # Bu değer Kubernetes Secret'larından gelmelidir.
+              value: {{ .Values.userService.env.secretKey | quote }}
