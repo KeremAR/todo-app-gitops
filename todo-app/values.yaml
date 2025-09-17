@@ -1,149 +1,36 @@
-# Default values for todo-app.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+# Global settings for the todo-app chart.
+# This file is the single source of truth for the GitOps workflow.
 
-global:
-  imageRegistry: ghcr.io/keremar
-  image: {}
-  imagePullSecrets:
-    create: true
-    name: github-registry-secret
-    # The dockerconfigjson value will be injected at deploy time by Jenkins
-    dockerconfigjson: ""
+# This tag will be updated automatically by the Jenkins CI pipeline.
+imageTag: "latest"
 
-# User Service Configuration
+# The name of the secret used to pull images from a private registry.
+# This secret should be created in the target namespace.
+imagePullSecret: "github-registry-secret"
+
+# --- Service Configurations ---
+
 userService:
-  enabled: true
-  name: user-service
-  image:
-    repository: todo-app-user-service
-    tag: latest
-    pullPolicy: Always
-  service:
-    type: ClusterIP
-    port: 8001
-    targetPort: 8001
-  deployment:
-    replicas: 1
-  env:
-    secretKey: "dev-secret-key-change-in-production"
-  probes:
-    liveness:
-      httpGet:
-        path: /health
-        port: 8001
-      initialDelaySeconds: 30
-      periodSeconds: 30
-      timeoutSeconds: 10
-    readiness:
-      httpGet:
-        path: /health
-        port: 8001
-      initialDelaySeconds: 5
-      periodSeconds: 10
-  volumes:
-    userData:
-      mountPath: /app/data
+  repository: ghcr.io/keremar/todo-app-user-service
+  port: 5000
+  replicaCount: 1
 
-# Todo Service Configuration
 todoService:
-  enabled: true
-  name: todo-service
-  image:
-    repository: todo-app-todo-service
-    tag: latest
-    pullPolicy: Always
-  service:
-    type: ClusterIP
-    port: 8002
-    targetPort: 8002
-  deployment:
-    replicas: 1
-  env:
-    secretKey: "dev-secret-key-change-in-production"
-    userServiceUrl: "http://user-service:8001"
-  probes:
-    liveness:
-      httpGet:
-        path: /health
-        port: 8002
-      initialDelaySeconds: 30
-      periodSeconds: 30
-      timeoutSeconds: 10
-    readiness:
-      httpGet:
-        path: /health
-        port: 8002
-      initialDelaySeconds: 5
-      periodSeconds: 10
-  volumes:
-    todoData:
-      mountPath: /app/data
+  repository: ghcr.io/keremar/todo-app-todo-service
+  port: 5001
+  replicaCount: 1
 
-# Frontend Configuration
 frontend:
-  enabled: true
-  name: frontend
-  image:
-    repository: todo-app-frontend
-    tag: latest
-    pullPolicy: Always
-  service:
-    type: ClusterIP
-    port: 3000
-    targetPort: 3000
-  deployment:
-    replicas: 1
+  repository: ghcr.io/keremar/todo-app-frontend
+  port: 80
+  replicaCount: 1
 
-# Ingress Configuration
+# --- Ingress Configuration ---
 ingress:
+  # Enabled by default. Set to false to disable ingress creation.
   enabled: true
-  className: nginx
   host: todo-app.local
+  # Ingress class name. Make sure you have an Ingress controller like NGINX installed.
+  className: "nginx"
   annotations:
-    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, POST, PUT, DELETE, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Range,Authorization"
-  paths:
-    - path: /
-      pathType: Prefix
-      service: frontend
-      port: 3000
-    - path: /register
-      pathType: Prefix
-      service: user-service
-      port: 8001
-    - path: /login
-      pathType: Prefix
-      service: user-service
-      port: 8001
-    - path: /users
-      pathType: Prefix
-      service: user-service
-      port: 8001
-    - path: /todos
-      pathType: Prefix
-      service: todo-service
-      port: 8002
-    - path: /admin
-      pathType: Prefix
-      service: user-service
-      port: 8001
-
-# Resource limits and requests (optional)
-resources: {}
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
-
-# Node selector
-nodeSelector: {}
-
-# Tolerations
-tolerations: []
-
-# Affinity
-affinity: {}
+    nginx.ingress.kubernetes.io/rewrite-target: /
