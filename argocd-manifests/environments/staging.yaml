@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: staging-todo-app
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argocroj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/KeremAR/todo-app-gitops' # <-- TODO: Uygulama kodunuzun olduğu reponun URL'si
+    path: helm-charts/todo-app
+    targetRevision: master # Takip edilecek branch
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-staging.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true # Namespace yoksa oluşturur

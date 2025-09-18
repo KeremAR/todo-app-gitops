@@ -11,17 +11,13 @@ global:
     # The dockerconfigjson value will be injected at deploy time by Jenkins
     dockerconfigjson: ""
 
-  # THIS IS THE NEW GLOBAL TAG - Jenkins will update this single value
-  tag: "latest"
-
 # User Service Configuration
 userService:
   enabled: true
   name: user-service
   image:
     repository: todo-app-user-service
-    # If global.tag is set, use it; otherwise, fall back to the local tag.
-    tag: {{ .Values.global.tag | default "latest" }}
+    tag: latest
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -55,8 +51,7 @@ todoService:
   name: todo-service
   image:
     repository: todo-app-todo-service
-    # If global.tag is set, use it; otherwise, fall back to the local tag.
-    tag: {{ .Values.global.tag | default "latest" }}
+    tag: latest
     pullPolicy: Always
   service:
     type: ClusterIP
@@ -91,8 +86,7 @@ frontend:
   name: frontend
   image:
     repository: todo-app-frontend
-    # If global.tag is set, use it; otherwise, fall back to the local tag.
-    tag: {{ .Values.global.tag | default "latest" }}
+    tag: latest
     pullPolicy: Always
   service:
     type: ClusterIP
