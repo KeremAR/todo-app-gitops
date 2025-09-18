@@ -16,7 +16,7 @@ spec:
         - name: {{ .Values.global.imagePullSecrets.name }}
       containers:
         - name: user-service
-          image: "{{ .Values.global.imageRegistry }}/{{ .Values.userService.image.repository }}:{{ .Values.userService.image.tag }}"
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.userService.image.repository }}:{{ .Values.global.tag | default .Values.userService.image.tag }}"
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.userService.service.targetPort }}

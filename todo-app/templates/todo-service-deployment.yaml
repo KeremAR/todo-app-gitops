@@ -16,7 +16,7 @@ spec:
         - name: {{ .Values.global.imagePullSecrets.name }}
       containers:
         - name: todo-service
-          image: "{{ .Values.global.imageRegistry }}/{{ .Values.todoService.image.repository }}:{{ .Values.todoService.image.tag }}"
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.todoService.image.repository }}:{{ .Values.global.tag | default .Values.todoService.image.tag }}"
           imagePullPolicy: Always
           ports:
             - containerPort: {{ .Values.todoService.service.targetPort }}
