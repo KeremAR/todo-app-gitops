@@ -8,9 +8,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/KeremAR/todo-app-gitops' # <-- TODO: Uygulama kodunuzun olduğu reponun URL'si
-    path: todo-app
-    targetRevision: main # Takip edilecek branch
+    repoURL: 'https://github.com/KeremAR/local-devops-infrastructure' # <-- TODO: Uygulama kodunuzun olduğu reponun URL'si
+    path: helm-charts/todo-app
+    targetRevision: master # Takip edilecek branch
     helm:
       valueFiles:
         - values.yaml
