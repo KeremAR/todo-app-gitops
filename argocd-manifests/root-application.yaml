@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/KeremAR/todo-app-gitops' # <-- TODO: GitOps reponuzun URL'sini buraya yazın
-    path: environments
+    path: argocd-manifests/environments
     targetRevision: HEAD
   destination:
     server: https://kubernetes.default.svc
