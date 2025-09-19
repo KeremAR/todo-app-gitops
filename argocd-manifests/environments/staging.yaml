@@ -9,7 +9,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/KeremAR/todo-app-gitops' # <-- TODO: Uygulama kodunuzun olduğu reponun URL'si
-    path: helm-charts/todo-app
+    path: todo-app
     targetRevision: main # Takip edilecek branch
     helm:
       valueFiles:
