@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: 'https://github.com/KeremAR/local-devops-infrastructure' # <-- TODO: Uygulama kodunuzun olduğu reponun URL'si
     path: helm-charts/todo-app
-    targetRevision: 'v1.0.13'
+    targetRevision: 'v1.0.14'
     helm:
       valueFiles:
         - values.yaml
