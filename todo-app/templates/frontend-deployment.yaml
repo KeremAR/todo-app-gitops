@@ -23,11 +23,11 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: frontend
     spec:
-      {{- if .Values.global.imagePullSecrets }}
+      {{- with .Values.global.imagePullSecrets }}
       imagePullSecrets:
-      {{- range .Values.global.imagePullSecrets }}
+        {{- range . }}
         - name: {{ .name }}
-      {{- end }}
+        {{- end }}
       {{- end }}
       containers:
       - name: {{ .Values.frontend.name }}
